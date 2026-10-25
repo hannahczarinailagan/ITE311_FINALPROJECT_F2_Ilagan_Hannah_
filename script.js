@@ -27,28 +27,23 @@ petForm.addEventListener("submit", function (event) {
         return;
     }
 
-    const pet = {
-        name: name,
-        type: type
-    };
-
+    const pet = { name, type };
     pets.push(pet);
 
     const card = document.createElement("div");
     card.className = "pet-card";
 
-    const petName = document.createElement("h3");
-    petName.textContent = pet.name;
+    const petNameHeading = document.createElement("h3");
+    petNameHeading.textContent = pet.name;
 
-    const petType = document.createElement("p");
-    petType.textContent = "Pet type: " + pet.type;
+    const petTypeText = document.createElement("p");
+    petTypeText.textContent = "Pet type: " + pet.type;
 
-    card.appendChild(petName);
-    card.appendChild(petType);
+    card.appendChild(petNameHeading);
+    card.appendChild(petTypeText);
     petList.appendChild(card);
 
     petMessage.textContent = `${name}'s profile was added successfully.`;
-
     petForm.reset();
 });
 
@@ -76,22 +71,14 @@ appointmentForm.addEventListener("submit", function (event) {
         return;
     }
 
-    const appointment = {
-        owner: owner,
-        petName: petName,
-        service: service,
-        date: date,
-        phone: phone
-    };
-
+    const appointment = { owner, petName, service, date, phone };
     appointments.push(appointment);
 
     const card = document.createElement("div");
     card.className = "appointment-card";
 
     const details = document.createElement("p");
-    details.textContent =
-        `${owner} — ${petName} — ${service} — ${date}`;
+    details.textContent = `${owner} — ${petName} — ${service} — ${date}`;
 
     card.appendChild(details);
     appointmentList.appendChild(card);
@@ -120,6 +107,7 @@ previewSms.addEventListener("click", function () {
         return;
     }
 
+    // Validate Philippine mobile number.
     const normalizedPhone = phone.replace(/[\s-]/g, "");
     const validPhone = /^(09\d{9}|\+639\d{9})$/;
 
@@ -129,6 +117,13 @@ previewSms.addEventListener("click", function () {
         return;
     }
 
+    // Validate SMS message length.
+    if (message.length > 160) {
+        smsPreview.textContent =
+            `Message is too long (${message.length}/160 characters). Please shorten it.`;
+        return;
+    }
+
     smsPreview.textContent =
-        `SMS preview for ${normalizedPhone}: ${message} (Demo only; not sent.)`;
+        `SMS preview for ${normalizedPhone}: ${message} (${message.length}/160 characters; demo only, not sent.)`;
 });
