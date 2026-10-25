@@ -1,164 +1,113 @@
-const bookingForm = document.getElementById("bookingForm");
-const bookingMessage = document.getElementById("bookingMessage");
-const appointmentDate = document.getElementById("date");
 
 const petForm = document.getElementById("petForm");
-const petMessage = document.getElementById("petMessage");
 const petList = document.getElementById("petList");
+const petMessage = document.getElementById("petMessage");
 
+const appointmentForm = document.getElementById("appointmentForm");
 const appointmentList = document.getElementById("appointmentList");
+const bookingMessage = document.getElementById("bookingMessage");
 
 const notificationPhone = document.getElementById("notificationPhone");
 const notificationMessage = document.getElementById("notificationMessage");
 const previewSms = document.getElementById("previewSms");
 const smsPreview = document.getElementById("smsPreview");
 
-// Use the local date instead of UTC to avoid date differences.
-function getLocalDate() {
-    const now = new Date();
-    const local = new Date(
-        now.getTime() - now.getTimezoneOffset() * 60000
-    );
-
-    return local.toISOString().split("T")[0];
-}
-
-appointmentDate.min = getLocalDate();
-
-// Store demo records in this browser.
-// These records are not saved to a server or MySQL database.
 const pets = [];
 const appointments = [];
 
-function createElement(tag, className, text) {
-    const element = document.createElement(tag);
-
-    if (className) {
-        element.className = className;
-    }
-
-    if (text !== undefined) {
-        element.textContent = text;
-    }
-
-    return element;
-}
-
-// PET MANAGEMENT
+// PET PROFILE MANAGEMENT
 petForm.addEventListener("submit", function (event) {
     event.preventDefault();
 
     const name = document.getElementById("petName").value.trim();
     const type = document.getElementById("petType").value;
-    const breed = document.getElementById("petBreed").value.trim();
-    const age = document.getElementById("petAge").value;
 
     if (!name || !type) {
         petMessage.textContent = "Enter the pet's name and type.";
         return;
     }
 
-    const pet = { name, type, breed, age };
+    const pet = {
+        name: name,
+        type: type
+    };
+
     pets.push(pet);
 
-    renderPets();
+    const card = document.createElement("div");
+    card.className = "pet-card";
+
+    const petName = document.createElement("h3");
+    petName.textContent = pet.name;
+
+    const petType = document.createElement("p");
+    petType.textContent = "Pet type: " + pet.type;
+
+    card.appendChild(petName);
+    card.appendChild(petType);
+    petList.appendChild(card);
 
     petMessage.textContent = `${name}'s profile was added successfully.`;
+
     petForm.reset();
 });
 
-function renderPets() {
-    petList.replaceChildren();
-
-    pets.forEach(function (pet) {
-        const card = createElement("article", "service-card");
-        card.appendChild(createElement("h3", "", `🐾 ${pet.name}`));
-        card.appendChild(createElement("p", "", `Type: ${pet.type}`));
-        card.appendChild(createElement("p", "", `Breed: ${pet.breed || "Not specified"}`));
-        card.appendChild(createElement("p", "", `Age: ${pet.age || "Not specified"}`));
-
-        petList.appendChild(card);
-    });
-}
-
 // APPOINTMENT BOOKING
-bookingForm.addEventListener("submit", function (event) {
+appointmentForm.addEventListener("submit", function (event) {
     event.preventDefault();
 
-    const owner = document.getElementById("owner").value.trim();
-    const pet = document.getElementById("bookingPet").value.trim();
+    const owner = document.getElementById("ownerName").value.trim();
+    const petName = document.getElementById("appointmentPet").value.trim();
     const service = document.getElementById("service").value;
-    const date = appointmentDate.value;
-    const time = document.getElementById("time").value;
+    const date = document.getElementById("appointmentDate").value;
     const phone = document.getElementById("phone").value.trim();
 
-    if (!owner || !pet || !service || !date || !time) {
+    if (!owner || !petName || !service || !date) {
         bookingMessage.textContent = "Please complete all required fields.";
         return;
     }
 
-    if (date < getLocalDate()) {
+    const selectedDate = new Date(date + "T00:00:00");
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    if (selectedDate < today) {
         bookingMessage.textContent = "Please choose today or a future date.";
         return;
     }
 
     const appointment = {
-        owner,
-        pet,
-        service,
-        date,
-        time,
-        phone,
-        status: "Pending"
+        owner: owner,
+        petName: petName,
+        service: service,
+        date: date,
+        phone: phone
     };
 
     appointments.push(appointment);
-    renderAppointments();
+
+    const card = document.createElement("div");
+    card.className = "appointment-card";
+
+    const details = document.createElement("p");
+    details.textContent =
+        `${owner} — ${petName} — ${service} — ${date}`;
+
+    card.appendChild(details);
+    appointmentList.appendChild(card);
 
     bookingMessage.textContent =
-        `Appointment request prepared for ${pet} on ${date} at ${time}.`;
+        `Appointment for ${petName} booked successfully!`;
 
     // Prepare an optional SMS reminder draft.
     if (phone) {
         notificationPhone.value = phone;
         notificationMessage.value =
-            `Hello ${owner}, your ${service.toLowerCase()} appointment ` +
-            `request for ${pet} is scheduled for ${date} at ${time}. ` +
-            `Please wait for confirmation. - PetBook`;
+            `Hello ${owner}, this is a reminder for ${petName}'s ${service} appointment on ${date}.`;
     }
 
-    bookingForm.reset();
-    appointmentDate.min = getLocalDate();
+    appointmentForm.reset();
 });
-
-function renderAppointments() {
-    appointmentList.replaceChildren();
-
-    appointments.forEach(function (appointment, index) {
-        const card = createElement("article", "service-card");
-
-        card.appendChild(
-            createElement("h3", "", `${index + 1}. ${appointment.pet}`)
-        );
-        card.appendChild(
-            createElement("p", "", `Owner: ${appointment.owner}`)
-        );
-        card.appendChild(
-            createElement("p", "", `Service: ${appointment.service}`)
-        );
-        card.appendChild(
-            createElement("p", "", `Date: ${appointment.date}`)
-        );
-        card.appendChild(
-            createElement("p", "", `Time: ${appointment.time}`)
-        );
-        card.appendChild(
-            createElement("p", "", `Status: ${appointment.status}`)
-        );
-
-        appointmentList.appendChild(card);
-    });
-}
 
 // SMS NOTIFICATION PREVIEW
 previewSms.addEventListener("click", function () {
@@ -171,6 +120,15 @@ previewSms.addEventListener("click", function () {
         return;
     }
 
+    const normalizedPhone = phone.replace(/[\s-]/g, "");
+    const validPhone = /^(09\d{9}|\+639\d{9})$/;
+
+    if (!validPhone.test(normalizedPhone)) {
+        smsPreview.textContent =
+            "Enter a valid Philippine mobile number (09XXXXXXXXX or +639XXXXXXXXX).";
+        return;
+    }
+
     smsPreview.textContent =
-        `SMS preview for ${phone}: ${message} (Demo only; not sent.)`;
+        `SMS preview for ${normalizedPhone}: ${message} (Demo only; not sent.)`;
 });
