@@ -1,329 +1,188 @@
 
+<?php
+$pageTitle = "PetBook";
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PetBook | Pet Care Made Easy</title>
+    <title><?php echo htmlspecialchars($pageTitle); ?> | Pet Care Management</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <header class="site-header">
-        <div class="container nav-container">
-            <a href="#home" class="logo">🐾 PetBook</a>
 
-            <nav aria-label="Main navigation">
-                <a href="#home">Home</a>
-                <a href="#services">Services</a>
-                <a href="#pets">My Pets</a>
-                <a href="#appointments">Appointments</a>
-                <a href="#notifications">Notifications</a>
-            </nav>
-        </div>
-    </header>
+<header class="header">
+    <div class="container">
+        <h1>PetBook</h1>
+        <p>Your Pet Care and Appointment Companion</p>
 
-    <main>
-        <section id="home" class="hero">
-            <div class="container hero-content">
-                <div>
-                    <p class="eyebrow">YOUR PET'S CARE COMPANION</p>
-                    <h1>Better care for your <span>best friend.</span></h1>
-                    <p class="hero-description">
-                        Manage your pet profiles, book grooming and veterinary
-                        appointments, and keep track of important pet care details
-                        in one convenient place.
-                    </p>
-                    <a href="#appointments" class="btn btn-primary">
-                        Book an Appointment
-                    </a>
-                </div>
+        <nav>
+            <a href="#home">Home</a>
+            <a href="#pets">Pet Profiles</a>
+            <a href="#appointments">Appointments</a>
+            <a href="#notifications">Notifications</a>
+        </nav>
+    </div>
+</header>
 
-                <div class="hero-card">
-                    <div class="pet-illustration">🐶</div>
-                    <h2>Happy Pets, Happy Hearts</h2>
-                    <p>Making every visit a little easier.</p>
-                </div>
+<main class="container">
+
+    <section id="home" class="section">
+        <h2>Welcome to PetBook!</h2>
+        <p>
+            PetBook helps pet owners organize pet profiles and request
+            appointments with pet grooming shops and veterinary clinics.
+        </p>
+    </section>
+
+    <section id="pets" class="section">
+        <h2>Pet Profiles</h2>
+        <p>Manage pet profiles and keep each pet's information organized.</p>
+
+        <form id="petForm">
+            <div class="form-group">
+                <label for="petName">Pet Name</label>
+                <input
+                    type="text"
+                    id="petName"
+                    name="petName"
+                    placeholder="Enter pet name"
+                    required
+                >
             </div>
-        </section>
 
-        <section id="services" class="section">
-            <div class="container">
-                <div class="section-heading">
-                    <p class="eyebrow">WHAT WE OFFER</p>
-                    <h2>Pet Care Services</h2>
-                    <p>Everything your furry companion needs.</p>
-                </div>
-
-                <div class="service-grid">
-                    <article class="service-card">
-                        <div class="service-icon">✂️</div>
-                        <h3>Pet Grooming</h3>
-                        <p>Keep your pet clean, comfortable, and looking their best.</p>
-                    </article>
-
-                    <article class="service-card">
-                        <div class="service-icon">🩺</div>
-                        <h3>Veterinary Care</h3>
-                        <p>Arrange checkups and keep important health details organized.</p>
-                    </article>
-
-                    <article class="service-card">
-                        <div class="service-icon">💉</div>
-                        <h3>Vaccination Tracking</h3>
-                        <p>Record vaccination details and important care dates.</p>
-                    </article>
-
-                    <article class="service-card">
-                        <div class="service-icon">⭐</div>
-                        <h3>Loyalty Rewards</h3>
-                        <p>Make repeat visits more rewarding for you and your pet.</p>
-                    </article>
-                </div>
+            <div class="form-group">
+                <label for="petType">Pet Type</label>
+                <select id="petType" name="petType" required>
+                    <option value="">Select pet type</option>
+                    <option value="Dog">Dog</option>
+                    <option value="Cat">Cat</option>
+                    <option value="Bird">Bird</option>
+                    <option value="Other">Other</option>
+                </select>
             </div>
-        </section>
 
-        <section id="pets" class="section section-soft">
-            <div class="container">
-                <div class="section-heading">
-                    <p class="eyebrow">YOUR FURRY FAMILY</p>
-                    <h2>Pet Profile Manager</h2>
-                    <p class="section-description">
-                        Keep your pets' details organized in one place.
-                    </p>
-                </div>
+            <button class="button" type="submit">Add Pet Profile</button>
+            <p id="petMessage" role="status" aria-live="polite"></p>
+        </form>
 
-                <div class="content-card">
-                    <form id="petForm">
-                        <div class="form-grid">
-                            <div class="form-group">
-                                <label for="petName">Pet Name</label>
-                                <input
-                                    type="text"
-                                    id="petName"
-                                    name="petName"
-                                    placeholder="e.g. Mochi"
-                                    required
-                                >
-                            </div>
+        <div id="petList" class="card-list"></div>
+    </section>
 
-                            <div class="form-group">
-                                <label for="petType">Pet Type</label>
-                                <select id="petType" name="petType" required>
-                                    <option value="">Choose pet type</option>
-                                    <option value="Dog">Dog</option>
-                                    <option value="Cat">Cat</option>
-                                    <option value="Rabbit">Rabbit</option>
-                                    <option value="Bird">Bird</option>
-                                    <option value="Other">Other</option>
-                                </select>
-                            </div>
+    <section id="appointments" class="section">
+        <h2>Book an Appointment</h2>
+        <p>Enter the details below to prepare a pet care appointment request.</p>
 
-                            <div class="form-group">
-                                <label for="petBreed">Breed</label>
-                                <input
-                                    type="text"
-                                    id="petBreed"
-                                    name="petBreed"
-                                    placeholder="e.g. Shih Tzu"
-                                    required
-                                >
-                            </div>
-
-                            <div class="form-group">
-                                <label for="petAge">Age</label>
-                                <input
-                                    type="number"
-                                    id="petAge"
-                                    name="petAge"
-                                    min="0"
-                                    max="100"
-                                    placeholder="Age in years"
-                                    required
-                                >
-                            </div>
-                        </div>
-
-                        <button type="submit" class="btn btn-primary">
-                            Add Pet Profile
-                        </button>
-                    </form>
-
-                    <div class="list-heading">
-                        <h3>My Pet Profiles</h3>
-                        <span id="petCount" class="count-badge">0 pets</span>
-                    </div>
-
-                    <div id="petList" class="pet-grid">
-                        <p class="empty-state">No pet profiles added yet.</p>
-                    </div>
-                </div>
+        <form id="appointmentForm">
+            <div class="form-group">
+                <label for="ownerName">Pet Owner's Name</label>
+                <input
+                    type="text"
+                    id="ownerName"
+                    name="ownerName"
+                    placeholder="Enter owner name"
+                    required
+                >
             </div>
-        </section>
 
-        <section id="appointments" class="section">
-            <div class="container">
-                <div class="section-heading">
-                    <p class="eyebrow">PLAN A VISIT</p>
-                    <h2>Book an Appointment</h2>
-                    <p>Submit an appointment request for your pet.</p>
-                </div>
-
-                <div class="content-card">
-                    <form id="appointmentForm">
-                        <div class="form-grid">
-                            <div class="form-group">
-                                <label for="ownerName">Pet Owner's Name</label>
-                                <input
-                                    type="text"
-                                    id="ownerName"
-                                    name="ownerName"
-                                    placeholder="Your full name"
-                                    required
-                                >
-                            </div>
-
-                            <div class="form-group">
-                                <label for="appointmentPet">Pet Name</label>
-                                <input
-                                    type="text"
-                                    id="appointmentPet"
-                                    name="appointmentPet"
-                                    placeholder="Your pet's name"
-                                    required
-                                >
-                            </div>
-
-                            <div class="form-group">
-                                <label for="serviceType">Service</label>
-                                <select id="serviceType" name="serviceType" required>
-                                    <option value="">Select a service</option>
-                                    <option value="Pet Grooming">Pet Grooming</option>
-                                    <option value="Veterinary Checkup">Veterinary Checkup</option>
-                                    <option value="Vaccination">Vaccination</option>
-                                    <option value="Pet Bath">Pet Bath</option>
-                                </select>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="appointmentDate">Appointment Date</label>
-                                <input
-                                    type="date"
-                                    id="appointmentDate"
-                                    name="appointmentDate"
-                                    required
-                                >
-                            </div>
-
-                            <div class="form-group">
-                                <label for="appointmentTime">Appointment Time</label>
-                                <input
-                                    type="time"
-                                    id="appointmentTime"
-                                    name="appointmentTime"
-                                    required
-                                >
-                            </div>
-
-                            <div class="form-group">
-                                <label for="ownerPhone">Mobile Number</label>
-                                <input
-                                    type="tel"
-                                    id="ownerPhone"
-                                    name="ownerPhone"
-                                    placeholder="e.g. 09XXXXXXXXX"
-                                    pattern="[0-9+\-\s()]{7,20}"
-                                    required
-                                >
-                            </div>
-                        </div>
-
-                        <button type="submit" class="btn btn-primary">
-                            Submit Appointment Request
-                        </button>
-                        <p id="appointmentMessage" class="form-message" role="status"></p>
-                    </form>
-
-                    <div class="list-heading">
-                        <h3>Appointment Requests</h3>
-                        <span id="appointmentCount" class="count-badge">0 requests</span>
-                    </div>
-
-                    <div id="appointmentList" class="appointment-list">
-                        <p class="empty-state">No appointment requests yet.</p>
-                    </div>
-                </div>
+            <div class="form-group">
+                <label for="appointmentPet">Pet Name</label>
+                <input
+                    type="text"
+                    id="appointmentPet"
+                    name="appointmentPet"
+                    placeholder="Enter pet name"
+                    required
+                >
             </div>
-        </section>
 
-        <section id="notifications" class="section section-soft">
-            <div class="container">
-                <div class="section-heading">
-                    <p class="eyebrow">STAY INFORMED</p>
-                    <h2>SMS Notification Preview</h2>
-                    <p>Preview a reminder message for an appointment.</p>
-                </div>
-
-                <div class="content-card notification-card">
-                    <form id="smsForm">
-                        <div class="form-group">
-                            <label for="smsOwner">Pet Owner's Name</label>
-                            <input
-                                type="text"
-                                id="smsOwner"
-                                name="smsOwner"
-                                placeholder="Enter owner's name"
-                                required
-                            >
-                        </div>
-
-                        <div class="form-group">
-                            <label for="smsPet">Pet Name</label>
-                            <input
-                                type="text"
-                                id="smsPet"
-                                name="smsPet"
-                                placeholder="Enter pet's name"
-                                required
-                            >
-                        </div>
-
-                        <div class="form-group">
-                            <label for="smsDate">Appointment Date</label>
-                            <input type="date" id="smsDate" name="smsDate" required>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="smsTime">Appointment Time</label>
-                            <input type="time" id="smsTime" name="smsTime" required>
-                        </div>
-
-                        <button type="submit" class="btn btn-primary">
-                            Generate SMS Preview
-                        </button>
-                    </form>
-
-                    <div class="sms-preview">
-                        <h3>Message Preview</h3>
-                        <p id="smsMessage" aria-live="polite">
-                            Your appointment reminder will appear here.
-                        </p>
-                        <p class="small-note">
-                            Demo only: this preview does not send a real SMS message.
-                        </p>
-                    </div>
-                </div>
+            <div class="form-group">
+                <label for="service">Select Service</label>
+                <select id="service" name="service" required>
+                    <option value="">Choose a service</option>
+                    <option value="Pet Grooming">Pet Grooming</option>
+                    <option value="Veterinary Checkup">Veterinary Checkup</option>
+                    <option value="Bath and Haircut">Bath and Haircut</option>
+                    <option value="Vaccination">Vaccination</option>
+                </select>
             </div>
-        </section>
-    </main>
 
-    <footer class="site-footer">
-        <div class="container">
-            <a href="#home" class="logo">🐾 PetBook</a>
-            <p>Making pet care simpler, one appointment at a time.</p>
-            <p class="copyright">&copy; 2026 PetBook. All rights reserved.</p>
-        </div>
-    </footer>
+            <div class="form-group">
+                <label for="appointmentDate">Appointment Date</label>
+                <input
+                    type="date"
+                    id="appointmentDate"
+                    name="appointmentDate"
+                    required
+                >
+            </div>
 
-    <script src="script.js"></script>
+            <div class="form-group">
+                <label for="phone">Mobile Number (optional)</label>
+                <input
+                    type="tel"
+                    id="phone"
+                    name="phone"
+                    placeholder="09XXXXXXXXX"
+                >
+            </div>
+
+            <button class="button" type="submit">Book Appointment</button>
+            <p id="bookingMessage" role="status" aria-live="polite"></p>
+        </form>
+
+        <h3>Appointment List</h3>
+        <div id="appointmentList" class="card-list"></div>
+    </section>
+
+    <section id="notifications" class="section">
+        <h2>SMS Notifications</h2>
+        <p>
+            Prepare a reminder message for an appointment. This demo only
+            displays a preview and does not send real SMS messages.
+        </p>
+
+        <form id="notificationForm">
+            <div class="form-group">
+                <label for="notificationPhone">Mobile Number</label>
+                <input
+                    type="tel"
+                    id="notificationPhone"
+                    name="notificationPhone"
+                    placeholder="09XXXXXXXXX or +639XXXXXXXXX"
+                    required
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="notificationMessage">Message (maximum 160 characters)</label>
+                <textarea
+                    id="notificationMessage"
+                    name="notificationMessage"
+                    rows="4"
+                    maxlength="160"
+                    placeholder="Enter your reminder message"
+                    required
+                ></textarea>
+            </div>
+
+            <button id="previewSms" class="button" type="button">
+                Preview SMS
+            </button>
+
+            <p id="smsPreview" role="status" aria-live="polite"></p>
+        </form>
+    </section>
+
+</main>
+
+<footer class="footer">
+    <div class="container">
+        <p>&copy; <?php echo date("Y"); ?> PetBook. Pet care made easier.</p>
+    </div>
+</footer>
+
+<script src="script.js"></script>
 </body>
 </html>
